@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title></title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+     body {
+      font-family: 'Poppins', sans-serif;
+      background-image: url('wallpaper.jpg');
+      background-size: 40% 40%;
+      animation: gradientBG 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+      padding: 20px;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .padlock-container {
+      position: relative;
+      margin-bottom: 30px;
+      width: 120px;
+      height: 150px;
+    }
+
+    .desbloquear-cadeado,
+    .desbloquear-cadeado-detail,
+    .desbloquear-cadeado-locker,
+    .desbloquear-cadeado-hole {
+      position: absolute;
+    }
+
+    .desbloquear-cadeado {
+      background: linear-gradient(145deg, #e6e6e6, #ffffff);
+      width: 120px;
+      height: 120px;
+      border-radius: 30px 30px 3px 3px;
+      box-shadow:
+        5px 5px 10px rgba(0, 0, 0, 0.3),
+        -2px -2px 8px rgba(255, 255, 255, 0.1),
+        inset 3px 3px 5px rgba(0, 0, 0, 0.1),
+        inset -3px -3px 5px rgba(255, 255, 255, 0.2);
+      z-index: 1;
+    }
+
+    .desbloquear-cadeado::after {
+      content: '';
+      position: absolute;
+      top: 10px; left: 10px; right: 10px; bottom: 10px;
+      border-radius: 15px;
+      background: linear-gradient(145deg, #d1d1d1, #f0f0f0);
+      z-index: 1;
+    }
+
+    .desbloquear-cadeado-detail {
+      width: 14px;
+      height: 20px;
+      background: linear-gradient(135deg, #e6e6e6, #8a8a8a);
+      clip-path: polygon(0% 100%, 0% 0%, 100% 0%, 100% 100%);
+      border-radius: 30%;
+      left: 66%;
+      bottom: 55%;
+      z-index: 3;
+      transition: all 0.3s ease;
+      transform-origin: right center;
+    }
+
+    .desbloquear-cadeado-locker {
+      width: 120px;
+      height: 150px;
+      border: solid #d1d1d1 15px;
+      border-top-color: #f5f5f5;
+      border-left-color: #e0e0e0;
+      border-right-color: #b0b0b0;
+      border-bottom-color: #8a8a8a;
+      clip-path: polygon(0% 70%, 0% 0%, 100% 0%, 100% 70%);
+      border-radius: 30%;
+      left: 0;
+      bottom: 50%;
+      z-index: 2;
+      transition: all 0.3s ease;
+      transform-origin: right center;
+    }
+
+    .desbloquear-cadeado-hole {
+      background: #333;
+      width: 1px;
+      height: 1px;
+      left: 50%;
+      top: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(20);
+      z-index: 4;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .unlock .desbloquear-cadeado-locker {
+      animation: desbloquear 3s ease forwards;
+    }
+
+    .unlock .desbloquear-cadeado-detail {
+      animation: desbloquear-detail 3s ease forwards;
+    }
+
+    @keyframes desbloquear {
+      0%, 30% { transform: translateY(-15px) rotateY(0deg); }
+      100% { transform: translateY(-15px) rotateY(-180deg); }
+    }
+
+    @keyframes desbloquear-detail {
+      0%, 30% { transform: rotateY(0deg); }
+      100% { transform: rotateY(-180deg); }
+    }
+
+    .login-container {
+      background: #ffffffdd;
+      backdrop-filter: blur(10px);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      text-align: center;
+      width: 100%;
+    }
+
+    h2 {
+      color: #1e1e2f;
+      margin-bottom: 25px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 20px;
+      border: 1px solid #0c0c0c;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #0055ff;
+      box-shadow: 0 0 8px #0055ff66;
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 30px 20px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      input {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="padlock-container" id="padlock">
+    <div class="desbloquear-cadeado-hole" onclick="handleUnlock()"></div>
+    <div class="desbloquear-cadeado-locker"></div>
+    <div class="desbloquear-cadeado-detail"></div>
+    <div class="desbloquear-cadeado"></div>
+  </div>
+
+  <div class="login-container">
+    <h2>Login to OB PRIME COMPANY</h2>
+    <input type="text" id="uniqueNumber" placeholder="Enter your unique number" />
+    <p style="color: #ff0000;">Click The black hole on the padlock to open</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    const users = {
+      "C202426": "Mr. Godwin",
+      "S202426": "",
+      "F202426": ""
+    };
+
+    function handleUnlock() {
+      const input = document.getElementById("uniqueNumber");
+      const uniqueNumber = input.value.trim().toUpperCase();
+
+      if (users[uniqueNumber]) {
+        const username = users[uniqueNumber];
+        const padlock = document.getElementById("padlock");
+        padlock.classList.add("unlock");
+
+        setTimeout(() => {
+          Swal.fire({
+            icon: 'success',
+            title: `Welcome, ${username}!`,
+            text: 'Redirecting to OB Prime Booking form ...',
+            showConfirmButton: false,
+            timer: 2000
+          }).then(() => {
+            window.location.href = "home.html";
+          });
+        }, 3000);
+
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops!',
+          text: 'Invalid unique number. Please try again.',
+          confirmButtonText: 'Try Again'
+        });
+      }
+    }
+  </script>
+</body>
+</html>

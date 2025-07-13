@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OB Prime Car Rental</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #1f2937;
+    }
+
+    .header {
+      background: linear-gradient(to right, #021f6d, #4489f8);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      font-weight: 700;
+      font-size: 2.5rem;
+    }
+
+    .carousel-item img {
+      height: 400px;
+      object-fit: cover;
+      border-radius: 20px;
+      transition: 0.3s ease-in-out;
+    }
+
+    .carousel {
+      margin-bottom: 40px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 2px rgb(1, 2, 12);
+    }
+
+    .card {
+      background: rgb(250, 247, 247);
+      backdrop-filter: blur(12px);
+      border: none;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 6px 8px rgb(1, 6, 29);
+    }
+
+    .form-control,
+    .form-select,
+    textarea {
+      border-radius: 10px;
+      background-color: #f9f9fc8f;
+      border: 1px solid #010816;
+    }
+
+    .btn-primary {
+      background-color: #000a01;
+      border: none;
+      font-weight: 600;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .btn-primary:hover {
+      background-color: #26fc09;
+      color: #000a01;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .carousel-item img {
+        height: 250px;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container py-4">
+    <div class="header mb-5">
+      <h1>OB PRIME COMPANY LIMITED</h1>
+      <p class="mb-1">Car Rental Services - Takoradi</p>
+      <small>Email: obprimecompany@gmail.com | Tel: 0244992020 / 0501436922</small>
+    </div>
+
+    <!-- Auto Slide Carousel -->
+    <div id="carCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+      <div class="carousel-inner">
+        <div class="carousel-item active"><img src="Corolla.jpg" class="d-block w-100" alt="Toyota Corolla"></div>
+        <div class="carousel-item"><img src="prado1.jpg" class="d-block w-100" alt="Landcruiser Prado"></div>
+        <div class="carousel-item"><img src="prado2.jpg" class="d-block w-100" alt="Landcruiser Prado"></div>
+        <div class="carousel-item"><img src="Corolla.avif" class="d-block w-100" alt="Toyota Corolla"></div>
+        <div class="carousel-item"><img src="prado3.jpg" class="d-block w-100" alt="Landcruiser Prado"></div>
+      </div>
+    </div>
+
+    <!-- Booking Form -->
+    <div class="card mt-5">
+      <h4 class="mb-4" style="color: blue;">Car Rental Booking Form</h4>
+      <form id="rentalForm">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>Full Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" class="form-control" required>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label>Pickup Location</label>
+          <input type="text" name="location" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Destination</label>
+          <input type="text" name="destination" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Select Car</label>
+          <select name="car" class="form-select" required>
+            <option disabled selected>-- Choose a car --</option>
+            <option>WR 1109-18 - Toyota Corolla</option>
+            <option>BB 1975-23 - Landcruiser Prado</option>
+            <option>GT 1870-17 - Landcruiser Prado</option>
+            <option>GR 7222-25 - Landcruiser Prado</option>
+            <option>GR 7225-25 - Landcruiser Prado</option>
+          </select>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>Rental Start Date</label>
+            <input type="date" name="startDate" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label>Rental End Date</label>
+            <input type="date" name="endDate" class="form-control" required>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label>Amount Charged Per Day (GHS)</label>
+          <input type="number" name="amountPerDay" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Special Request (Optional)</label>
+          <textarea name="message" rows="3" class="form-control" placeholder="Any additional information..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Submit Booking Request</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById("rentalForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const name = form.name.value.trim();
+      const phone = form.phone.value.trim();
+      const pickup = form.location.value.trim();
+      const destination = form.destination.value.trim();
+      const car = form.car.value;
+      const startDate = new Date(form.startDate.value);
+      const endDate = new Date(form.endDate.value);
+      const amountPerDay = parseFloat(form.amountPerDay.value);
+      const message = form.message.value.trim();
+
+      const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) || 1;
+      const totalFees = (days * amountPerDay).toFixed(2);
+
+      const formData = new URLSearchParams({
+        name, phone, pickup, destination,
+        car, startDate: form.startDate.value,
+        endDate: form.endDate.value,
+        amountPerDay, days, totalFees, message
+      });
+
+      // Send data to Google Sheet
+      fetch("https://script.google.com/macros/s/AKfycbwUkyo2vocFALpcrff6s0eHWpLq5nldNWcKPNmuYk9bWCVG2cL6JbRYx_DTGcNUU4FC/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.text())
+      .then(() => {
+        // Send SMS
+        const smsMsg = `Hello Boss, Customer ${name} has rented a ${car} from ${pickup} to ${destination} from ${form.startDate.value} to ${form.endDate.value}. GHS${amountPerDay} was charged per day. Total Amount was GHS${totalFees}`;
+        const smsUrl = `https://apps.mnotify.net/smsapi?key=zwNY4rjo1XWnMXn8Om7Q8gk1U&to=+233244992020&msg=${encodeURIComponent(smsMsg)}&sender_id=LUXEDIGITAL`;
+
+        fetch(smsUrl)
+          .then(response => response.text())
+          .then(() => {
+            alert("✅ Booking request submitted! SMS sent to admin.");
+            form.reset();
+          })
+          .catch(() => {
+            alert("✅ Booking submitted, but SMS failed to send.");
+            form.reset();
+          });
+      })
+      .catch(err => {
+        alert("❌ Failed to submit: " + err.message);
+      });
+    });
+  </script>
+</body>
+</html>
