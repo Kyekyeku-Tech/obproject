@@ -247,7 +247,7 @@ const car = form.car.value;
         // Send SMS
         const smsMsg = `Hello Boss, Customer ${name} (${idType}: ${idNumber}) has rented a ${car} from ${pickup} to ${destination} from ${form.startDate.value} to ${form.endDate.value}. GHS${amountPerDay} was charged per day. Total Amount was GHS${totalFees}`;
 
-        const smsUrl = `https://apps.mnotify.net/smsapi?key=wPUfkC52NTbQPBuMRgbGeohk8&to=+233545454000&msg=${encodeURIComponent(smsMsg)}&sender_id=AYEKOO`;
+        const smsUrl = `https://apps.mnotify.net/smsapi?key=wPUfkC52NTbQPBuMRgbGeohk8&to=+233244992020&msg=${encodeURIComponent(smsMsg)}&sender_id=AYEKOO`;
 
         fetch(smsUrl)
           .then(response => response.text())
