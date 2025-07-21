@@ -9,6 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
   <link rel="icon" href="ob.jpg" type="image/x-icon">
   <style>
     body {
@@ -206,12 +209,26 @@
           <h5 class="mb-4" style="color: #1f06fc;">Step 3: Booking Info</h5>
           <div class="row mb-3">
             <div class="col-md-6">
-              <label>Rental Start Date</label>
-              <input type="date" name="startDate" class="form-control" required>
-            </div>
-            <div class="col-md-6">
-              <label>Rental End Date</label>
-              <input type="date" name="endDate" class="form-control" required>
+              <label>Start Date</label>
+              <input id="startDate" name="startDate" class="form-control" required><br>
+              <label>End Date</label>
+<input id="endDate" name="endDate" class="form-control" required>
+              <script>
+                flatpickr("#startDate", {
+                  dateFormat: "d-m-Y",
+                  minDate: "today",
+                  enableTime: false,
+                  time_24hr: true,
+                  defaultDate: new Date()
+                });
+                flatpickr("#endDate", {
+                  dateFormat: "d-m-Y",
+                  minDate: "today",
+                  enableTime: false,
+                  time_24hr: true,
+                  defaultDate: new Date()
+                });
+              </script>
             </div>
           </div>
           <div class="mb-3">
@@ -282,13 +299,13 @@
   });
 
   // Crop ID Image before Upload
-  idInput.addEventListener("change", function () {
+ idInput.addEventListener("change", function () {
   const file = this.files[0];
   if (!file) return;
 
   const reader = new FileReader();
   reader.onload = function (e) {
-    const cropImage = document.getElementById("cropImage"); // Ensure correct scope
+    const cropImage = document.getElementById("cropImage");
     cropImage.src = e.target.result;
 
     const cropModalEl = document.getElementById("cropModal");
@@ -296,17 +313,36 @@
     cropModal.show();
 
     cropModalEl.addEventListener('shown.bs.modal', () => {
-      if (cropper) cropper.destroy();
-      cropper = new Cropper(cropImage, {
+      if (window.cropper) window.cropper.destroy();
+
+      window.cropper = new Cropper(cropImage, {
         aspectRatio: 16 / 9,
         viewMode: 1,
+        autoCropArea: 1,
+        responsive: true,
+        guides: true,
+        highlight: true,
+        movable: true,
+        zoomable: true,
+        rotatable: true, // Enable rotation
+        scalable: false,
+        cropBoxResizable: true,
+        dragMode: 'crop'
       });
+
+      // Rotate Button Logic
+      let rotateAngle = 0;
+      document.getElementById("rotateBtn").onclick = () => {
+        rotateAngle = (rotateAngle + 90) % 360;
+        window.cropper.rotateTo(rotateAngle);
+      };
     }, { once: true });
 
+    // Crop and replace file
     document.getElementById("cropConfirm").onclick = () => {
-      const canvas = cropper.getCroppedCanvas({
+      const canvas = window.cropper.getCroppedCanvas({
         width: 800,
-        height: 450,
+        height: 450
       });
 
       canvas.toBlob(blob => {
@@ -327,6 +363,7 @@
   };
   reader.readAsDataURL(file);
 });
+
 
   // Dynamic Car Field
   const carSelect = document.getElementById("carSelect");
@@ -480,17 +517,19 @@
   });
 </script>
 <!-- Crop Modal -->
+<!-- Crop Modal -->
 <div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Crop ID Card</h5>
+        <h5 class="modal-title">Adjust Crop Area</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">
         <img id="cropImage" style="max-width: 100%; max-height: 500px;" />
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer d-flex justify-content-between w-100">
+        <button type="button" id="rotateBtn" class="btn btn-warning">Rotate</button>
         <button type="button" id="cropConfirm" class="btn btn-primary">Crop & Continue</button>
       </div>
     </div>
