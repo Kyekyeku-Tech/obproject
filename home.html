@@ -232,10 +232,10 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
+<script>
   const form = document.getElementById("rentalForm");
 
+  // Input fields
   const nameInput = document.getElementById("customerName");
   const phoneInput = document.getElementById("customerPhone");
   const idTypeInput = document.getElementById("customerIdType");
@@ -244,6 +244,10 @@
   const idPreview = document.getElementById("idPreview");
   const nameSuggestions = document.getElementById("nameSuggestions");
 
+  const cropImage = document.getElementById("cropImage");
+  let cropper;
+
+  // Local Storage
   let customers = JSON.parse(localStorage.getItem("customers")) || [];
 
   function updateSuggestions() {
@@ -257,32 +261,31 @@
 
   updateSuggestions();
 
+  // Auto-fill on name selection
   nameInput.addEventListener("change", () => {
-  const selectedName = nameInput.value.trim().toLowerCase();
-  const customer = customers.find(c => c.name.toLowerCase() === selectedName);
-  if (customer) {
-    phoneInput.value = customer.phone;
-    idTypeInput.value = customer.idType;
-    idNumberInput.value = customer.idNumber;
-    if (customer.idImage) {
-      idPreview.src = customer.idImage;
-      idPreview.style.display = "block";
+    const selectedName = nameInput.value.trim().toLowerCase();
+    const customer = customers.find(c => c.name.toLowerCase() === selectedName);
+    if (customer) {
+      phoneInput.value = customer.phone;
+      idTypeInput.value = customer.idType;
+      idNumberInput.value = customer.idNumber;
+      if (customer.idImage) {
+        idPreview.src = customer.idImage;
+        idPreview.style.display = "block";
+      }
+    } else {
+      phoneInput.value = "";
+      idTypeInput.value = "Ghana Card";
+      idNumberInput.value = "";
+      idPreview.style.display = "none";
     }
-  } else {
-    phoneInput.value = "";
-    idTypeInput.value = "Ghana Card";
-    idNumberInput.value = "";
-    idPreview.style.display = "none";
-  }
-});
+  });
 
+  // Crop ID Image before Upload
+  idInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
 
-  let cropper;
-const cropImage = document.getElementById("cropImage");
-
-idInput.addEventListener("change", function () {
-  const file = this.files[0];
-  if (file) {
     const reader = new FileReader();
     reader.onload = function (e) {
       cropImage.src = e.target.result;
@@ -307,11 +310,9 @@ idInput.addEventListener("change", function () {
           idPreview.src = croppedUrl;
           idPreview.style.display = "block";
 
-          // Replace the file in the input for later upload
           const fileName = file.name.replace(/\.[^/.]+$/, "") + "_cropped.jpg";
           const newFile = new File([blob], fileName, { type: "image/jpeg" });
 
-          // Replace input file object with cropped image blob
           const dataTransfer = new DataTransfer();
           dataTransfer.items.add(newFile);
           idInput.files = dataTransfer.files;
@@ -321,10 +322,55 @@ idInput.addEventListener("change", function () {
       };
     };
     reader.readAsDataURL(file);
+  });
+
+  // Dynamic Car Field
+  const carSelect = document.getElementById("carSelect");
+  const otherCarDiv = document.getElementById("otherCarDiv");
+  const otherCarInput = document.getElementById("otherCarInput");
+
+  carSelect.addEventListener("change", function () {
+    if (this.value === "Other") {
+      otherCarDiv.classList.remove("d-none");
+      otherCarInput.required = true;
+    } else {
+      otherCarDiv.classList.add("d-none");
+      otherCarInput.required = false;
+    }
+  });
+
+  // Step Navigation
+  const steps = document.querySelectorAll(".form-step");
+  const nextBtns = document.querySelectorAll(".next-btn");
+  const backBtns = document.querySelectorAll(".back-btn");
+  let currentStep = 0;
+
+  function showStep(stepIndex) {
+    steps.forEach((step, index) => {
+      step.classList.toggle("active", index === stepIndex);
+      step.classList.toggle("d-none", index !== stepIndex);
+    });
   }
-});
 
+  nextBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    });
+  });
 
+  backBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    });
+  });
+
+  // Form Submit
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -335,9 +381,7 @@ idInput.addEventListener("change", function () {
     const pickup = form.location.value.trim();
     const destination = form.destination.value.trim();
     let car = form.car.value;
-if (car === "Other") {
-  car = otherCarInput.value.trim();
-}
+    if (car === "Other") car = otherCarInput.value.trim();
 
     const startDate = form.startDate.value;
     const endDate = form.endDate.value;
@@ -379,7 +423,6 @@ if (car === "Other") {
       localStorage.setItem("customers", JSON.stringify(customers));
       updateSuggestions();
 
-      // Show SweetAlert loading
       Swal.fire({
         title: 'Submitting Booking...',
         text: 'Please wait while we process the request.',
@@ -387,7 +430,6 @@ if (car === "Other") {
         didOpen: () => Swal.showLoading()
       });
 
-      // Submit to Google Sheets
       fetch("https://script.google.com/macros/s/AKfycbwUkyo2vocFALpcrff6s0eHWpLq5nldNWcKPNmuYk9bWCVG2cL6JbRYx_DTGcNUU4FC/exec", {
         method: "POST",
         body: formData
@@ -424,60 +466,13 @@ if (car === "Other") {
 
     if (file) {
       const reader = new FileReader();
-      reader.onload = function (e) {
-        submitData(e.target.result);
-      };
+      reader.onload = e => submitData(e.target.result);
       reader.readAsDataURL(file);
     } else {
       const existing = customers.find(c => c.name.toLowerCase() === name.toLowerCase());
       newCustomer.idImage = existing ? existing.idImage : null;
       submitData(newCustomer.idImage);
     }
-  });
-  const carSelect = document.getElementById("carSelect");
-const otherCarDiv = document.getElementById("otherCarDiv");
-const otherCarInput = document.getElementById("otherCarInput");
-
-carSelect.addEventListener("change", function () {
-  if (this.value === "Other") {
-    otherCarDiv.classList.remove("d-none");
-    otherCarInput.required = true;
-  } else {
-    otherCarDiv.classList.add("d-none");
-    otherCarInput.required = false;
-  }
-});
-
-
-  // Step Navigation
-  const steps = document.querySelectorAll(".form-step");
-  const nextBtns = document.querySelectorAll(".next-btn");
-  const backBtns = document.querySelectorAll(".back-btn");
-  let currentStep = 0;
-
-  function showStep(stepIndex) {
-    steps.forEach((step, index) => {
-      step.classList.toggle("active", index === stepIndex);
-      step.classList.toggle("d-none", index !== stepIndex);
-    });
-  }
-
-  nextBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (currentStep < steps.length - 1) {
-        currentStep++;
-        showStep(currentStep);
-      }
-    });
-  });
-
-  backBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (currentStep > 0) {
-        currentStep--;
-        showStep(currentStep);
-      }
-    });
   });
 </script>
 <!-- Crop Modal -->
