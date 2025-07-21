@@ -231,7 +231,7 @@
     </div>
   </div>
 
-  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   const form = document.getElementById("rentalForm");
 
@@ -283,46 +283,50 @@
 
   // Crop ID Image before Upload
   idInput.addEventListener("change", function () {
-    const file = this.files[0];
-    if (!file) return;
+  const file = this.files[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      cropImage.src = e.target.result;
-      const cropModal = new bootstrap.Modal(document.getElementById("cropModal"));
-      cropModal.show();
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const cropImage = document.getElementById("cropImage"); // Ensure correct scope
+    cropImage.src = e.target.result;
 
-      cropModal._element.addEventListener('shown.bs.modal', () => {
-        if (cropper) cropper.destroy();
-        cropper = new Cropper(cropImage, {
-          aspectRatio: 16 / 9,
-          viewMode: 1,
-        });
+    const cropModalEl = document.getElementById("cropModal");
+    const cropModal = new bootstrap.Modal(cropModalEl);
+    cropModal.show();
+
+    cropModalEl.addEventListener('shown.bs.modal', () => {
+      if (cropper) cropper.destroy();
+      cropper = new Cropper(cropImage, {
+        aspectRatio: 16 / 9,
+        viewMode: 1,
+      });
+    }, { once: true });
+
+    document.getElementById("cropConfirm").onclick = () => {
+      const canvas = cropper.getCroppedCanvas({
+        width: 800,
+        height: 450,
       });
 
-      document.getElementById("cropConfirm").onclick = () => {
-        const canvas = cropper.getCroppedCanvas({
-          width: 800,
-          height: 450,
-        });
-        canvas.toBlob(blob => {
-          const croppedUrl = canvas.toDataURL("image/jpeg");
-          idPreview.src = croppedUrl;
-          idPreview.style.display = "block";
+      canvas.toBlob(blob => {
+        const croppedUrl = canvas.toDataURL("image/jpeg");
+        idPreview.src = croppedUrl;
+        idPreview.style.display = "block";
 
-          const fileName = file.name.replace(/\.[^/.]+$/, "") + "_cropped.jpg";
-          const newFile = new File([blob], fileName, { type: "image/jpeg" });
+        const fileName = file.name.replace(/\.[^/.]+$/, "") + "_cropped.jpg";
+        const newFile = new File([blob], fileName, { type: "image/jpeg" });
 
-          const dataTransfer = new DataTransfer();
-          dataTransfer.items.add(newFile);
-          idInput.files = dataTransfer.files;
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(newFile);
+        idInput.files = dataTransfer.files;
 
-          bootstrap.Modal.getInstance(document.getElementById("cropModal")).hide();
-        }, 'image/jpeg', 0.9);
-      };
+        cropModal.hide();
+      }, 'image/jpeg', 0.9);
     };
-    reader.readAsDataURL(file);
-  });
+  };
+  reader.readAsDataURL(file);
+});
 
   // Dynamic Car Field
   const carSelect = document.getElementById("carSelect");
@@ -492,6 +496,5 @@
     </div>
   </div>
 </div>
-
 </body>
 </html>
