@@ -481,18 +481,16 @@
 
         return fetch(smsUrl).then(() => {
           Swal.fire({
-            icon: 'success',
-            title: '✅ Booking Sent!',
-            text: 'SMS and WhatsApp message prepared.',
-            confirmButtonColor: '#021f6d'
-          }).then(() => {
-            const whatsappLink = `https://wa.me/233244992020?text=${encodeURIComponent(smsMsg)}`;
-            window.open(whatsappLink, "_blank");
-            form.reset();
-            idPreview.style.display = "none";
-            currentStep = 0;
-            showStep(currentStep);
-          });
+  icon: 'success',
+  title: '✅ Booking Sent!',
+  text: 'SMS has been sent successfully.',
+  confirmButtonColor: '#021f6d'
+}).then(() => {
+  form.reset();
+  idPreview.style.display = "none";
+  currentStep = 0;
+  showStep(currentStep);
+});
         });
       })
       .catch(err => {
